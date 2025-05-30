@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:todo_app_with_getx/main.dart';
 
 import '../constant.dart';
 
@@ -8,6 +9,7 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    MyApp.changeColor(Color(0xFFF5F5F5), Brightness.dark);
     return Scaffold(
       floatingActionButton: const MyFloatingActionBotton(),
       body: SafeArea(
@@ -26,7 +28,12 @@ class MyFloatingActionBotton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton(
-      onPressed: () {},
+      heroTag: 'hero',
+      onPressed: () {
+        Get.toNamed('/addscreen')!.then((value) {
+          MyApp.changeColor(kLightBlueColor, Brightness.dark);
+        });
+      },
       backgroundColor: kLightBlueColor,
       elevation: 0,
       child: const Icon(Icons.add),
@@ -49,6 +56,31 @@ class BottomSectionWidget extends StatelessWidget {
           topRight: Radius.circular(30),
         ),
       )),
+      child: Container(
+        margin: const EdgeInsets.only(top: 20, right: 10, left: 50),
+        child: ListView.separated(
+          itemBuilder: (context, index) {
+            return ListTile(
+              title: Text('Title'),
+              subtitle: Text('Subtitle'),
+              onTap: () {},
+              trailing: Checkbox(
+                activeColor: kLightBlueColor,
+                value: true,
+                side: BorderSide(color: Colors.black45, width: 1.5),
+                onChanged: (value) {},
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5),
+                ),
+              ),
+            );
+          },
+          separatorBuilder: (context, index) {
+            return const Divider(color: Colors.black45, height: 1);
+          },
+          itemCount: 10,
+        ),
+      ),
     );
   }
 }
