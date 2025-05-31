@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import 'package:todo_app_with_getx/constant.dart';
 import 'package:todo_app_with_getx/controllers/task_controller.dart';
 import 'package:todo_app_with_getx/controllers/textfield_controller.dart';
@@ -47,16 +46,31 @@ class MyButton extends StatelessWidget {
         ),
 
         onPressed: () {
-          Get.find<TaskController>().tasks.add(
-            TaskModel(
-              taskTitle: Get.find<TextFieldController>().taskTitle!.text,
-              taskSubtitle: Get.find<TextFieldController>().taskSubtitle!.text,
-              status: false,
-            ),
-          );
-          Get.back();
+          if (Get.find<TaskController>().isEditing.value) {
+            var task = Get.find<TaskController>()
+                .tasks[Get.find<TaskController>().index];
+            task.taskTitle = Get.find<TextFieldController>().taskTitle!.text;
+            task.taskSubtitle =
+                Get.find<TextFieldController>().taskSubtitle!.text;
+            Get.find<TaskController>().tasks[Get.find<TaskController>().index] =
+                task;
+            Get.back();
+          } else {
+            Get.find<TaskController>().tasks.add(
+              TaskModel(
+                taskTitle: Get.find<TextFieldController>().taskTitle!.text,
+                taskSubtitle:
+                    Get.find<TextFieldController>().taskSubtitle!.text,
+                status: false,
+              ),
+            );
+            Get.back();
+          }
         },
-        child: Text('Add', style: TextStyle(color: Colors.white, fontSize: 17)),
+        child: Text(
+          Get.find<TaskController>().isEditing.value ? 'Edit Task' : 'Add Task',
+          style: TextStyle(color: Colors.white, fontSize: 17),
+        ),
       ),
     );
   }
@@ -133,8 +147,11 @@ class MyCustomAppBar extends StatelessWidget {
         Expanded(
           child: Container(
             margin: EdgeInsets.only(left: 50),
-            child: const Text(
-              'New Task',
+            child: Text(
+              Get.find<TaskController>().isEditing.value
+                  ? 'Edit Task'
+                  : 'New Task',
+
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),

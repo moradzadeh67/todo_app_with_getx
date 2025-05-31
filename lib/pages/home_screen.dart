@@ -4,6 +4,7 @@ import 'package:todo_app_with_getx/controllers/task_controller.dart';
 import 'package:todo_app_with_getx/main.dart';
 
 import '../constant.dart';
+import '../controllers/textfield_controller.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -31,6 +32,9 @@ class MyFloatingActionBotton extends StatelessWidget {
     return FloatingActionButton(
       heroTag: 'hero',
       onPressed: () {
+        Get.find<TaskController>().isEditing.value = false;
+        Get.find<TextFieldController>().taskTitle!.clear();
+        Get.find<TextFieldController>().taskSubtitle!.clear();
         Get.toNamed('/addscreen')!.then((value) {
           MyApp.changeColor(kLightBlueColor, Brightness.dark);
         });
@@ -62,17 +66,31 @@ class BottomSectionWidget extends StatelessWidget {
         child: Obx(() {
           return ListView.separated(
             itemBuilder: (context, index) {
+              var task = Get.find<TaskController>().tasks[index];
               return ListTile(
-                title: Text(Get.find<TaskController>().tasks[index].taskTitle),
-                subtitle: Text(
-                  Get.find<TaskController>().tasks[index].taskTitle,
-                ),
-                onTap: () {},
+                onLongPress: () {
+                  Get.find<TaskController>().tasks.removeAt(index);
+                },
+                title: Text(task.taskTitle ?? ''),
+                subtitle: Text(task.taskTitle ?? ''),
+                onTap: () {
+                  Get.find<TaskController>().isEditing.value = true;
+                  Get.find<TaskController>().index = index;
+                  Get.find<TextFieldController>().taskTitle!.text =
+                      task.taskTitle;
+                  Get.find<TextFieldController>().taskSubtitle!.text =
+                      task.taskSubtitle;
+                  Get.toNamed('/addscreen');
+                },
                 trailing: Checkbox(
                   activeColor: kLightBlueColor,
-                  value: Get.find<TaskController>().tasks[index].status,
+
+                  value: task.status,
                   side: BorderSide(color: Colors.black45, width: 1.5),
-                  onChanged: (value) {},
+                  onChanged: (value) {
+                    task.status = !task.status;
+                    Get.find<TaskController>().tasks[index] = task;
+                  },
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(5),
                   ),
