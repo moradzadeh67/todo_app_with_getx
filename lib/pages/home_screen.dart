@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:todo_app_with_getx/controllers/task_controller.dart';
 import 'package:todo_app_with_getx/main.dart';
 
 import '../constant.dart';
@@ -58,28 +59,32 @@ class BottomSectionWidget extends StatelessWidget {
       )),
       child: Container(
         margin: const EdgeInsets.only(top: 20, right: 10, left: 50),
-        child: ListView.separated(
-          itemBuilder: (context, index) {
-            return ListTile(
-              title: Text('Title'),
-              subtitle: Text('Subtitle'),
-              onTap: () {},
-              trailing: Checkbox(
-                activeColor: kLightBlueColor,
-                value: true,
-                side: BorderSide(color: Colors.black45, width: 1.5),
-                onChanged: (value) {},
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5),
+        child: Obx(() {
+          return ListView.separated(
+            itemBuilder: (context, index) {
+              return ListTile(
+                title: Text(Get.find<TaskController>().tasks[index].taskTitle),
+                subtitle: Text(
+                  Get.find<TaskController>().tasks[index].taskTitle,
                 ),
-              ),
-            );
-          },
-          separatorBuilder: (context, index) {
-            return const Divider(color: Colors.black45, height: 1);
-          },
-          itemCount: 10,
-        ),
+                onTap: () {},
+                trailing: Checkbox(
+                  activeColor: kLightBlueColor,
+                  value: Get.find<TaskController>().tasks[index].status,
+                  side: BorderSide(color: Colors.black45, width: 1.5),
+                  onChanged: (value) {},
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                ),
+              );
+            },
+            separatorBuilder: (context, index) {
+              return const Divider(color: Colors.black45, height: 1);
+            },
+            itemCount: Get.find<TaskController>().tasks.length,
+          );
+        }),
       ),
     );
   }
@@ -135,10 +140,12 @@ class TopSectionWidget extends StatelessWidget {
           ),
           Container(
             margin: const EdgeInsets.only(left: 50, top: 5),
-            child: const Text(
-              'Tasks',
-              style: TextStyle(color: Colors.white, fontSize: 18),
-            ),
+            child: Obx(() {
+              return Text(
+                '${Get.find<TaskController>().tasks.length} Tasks',
+                style: const TextStyle(color: Colors.white, fontSize: 18),
+              );
+            }),
           ),
         ],
       ),

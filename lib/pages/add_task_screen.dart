@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'package:todo_app_with_getx/constant.dart';
+import 'package:todo_app_with_getx/controllers/task_controller.dart';
+import 'package:todo_app_with_getx/controllers/textfield_controller.dart';
 import 'package:todo_app_with_getx/main.dart';
+import 'package:todo_app_with_getx/models/task_model.dart';
 
 class AddTaskScreen extends StatelessWidget {
   const AddTaskScreen({super.key});
@@ -43,8 +46,17 @@ class MyButton extends StatelessWidget {
           elevation: 0,
         ),
 
-        onPressed: () {},
-        child: Text('Add'),
+        onPressed: () {
+          Get.find<TaskController>().tasks.add(
+            TaskModel(
+              taskTitle: Get.find<TextFieldController>().taskTitle!.text,
+              taskSubtitle: Get.find<TextFieldController>().taskSubtitle!.text,
+              status: false,
+            ),
+          );
+          Get.back();
+        },
+        child: Text('Add', style: TextStyle(color: Colors.white, fontSize: 17)),
       ),
     );
   }
@@ -61,7 +73,7 @@ class NoteWidget extends StatelessWidget {
         maxLength: 30,
         cursorColor: kLightBlueColor,
         decoration: InputDecoration(
-          prefixIcon: Icon(Icons.bookmark_border, color: Colors.grey),
+          prefixIcon: const Icon(Icons.bookmark_border, color: Colors.grey),
           border: InputBorder.none,
           counter: Container(),
           hintText: 'Add Note',
@@ -79,6 +91,7 @@ class TaskTextFeild extends StatelessWidget {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 20),
       child: TextField(
+        controller: Get.find<TextFieldController>().taskTitle,
         maxLines: 6,
         cursorColor: kLightBlueColor,
         cursorHeight: 40,
