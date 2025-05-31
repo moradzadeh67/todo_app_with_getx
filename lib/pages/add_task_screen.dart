@@ -11,7 +11,7 @@ class AddTaskScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    MyApp.changeColor(const Color(0xFFF5F5F5), Brightness.light);
+    MyApp.changeColor(const Color(0xFFF5F5F5), Brightness.dark);
     return SafeArea(
       child: Scaffold(
         backgroundColor: const Color(0xFFF5F5F5),
@@ -20,7 +20,7 @@ class AddTaskScreen extends StatelessWidget {
           children: const [
             MyCustomAppBar(),
             TitleWidget(),
-            TaskTextFeild(),
+            TaskTextField(),
             NoteWidget(),
             MyButton(),
           ],
@@ -46,7 +46,7 @@ class MyButton extends StatelessWidget {
         ),
 
         onPressed: () {
-          if (Get.find<TaskController>().isEditing.value) {
+          if (Get.find<TaskController>().isEditing) {
             var task = Get.find<TaskController>()
                 .tasks[Get.find<TaskController>().index];
             task.taskTitle = Get.find<TextFieldController>().taskTitle!.text;
@@ -68,7 +68,7 @@ class MyButton extends StatelessWidget {
           }
         },
         child: Text(
-          Get.find<TaskController>().isEditing.value ? 'Edit Task' : 'Add Task',
+          Get.find<TaskController>().isEditing ? 'Edit Task' : 'Add Task',
           style: TextStyle(color: Colors.white, fontSize: 17),
         ),
       ),
@@ -84,6 +84,7 @@ class NoteWidget extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
       child: TextField(
+        controller: Get.find<TextFieldController>().taskSubtitle,
         maxLength: 30,
         cursorColor: kLightBlueColor,
         decoration: InputDecoration(
@@ -97,8 +98,8 @@ class NoteWidget extends StatelessWidget {
   }
 }
 
-class TaskTextFeild extends StatelessWidget {
-  const TaskTextFeild({super.key});
+class TaskTextField extends StatelessWidget {
+  const TaskTextField({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -148,9 +149,7 @@ class MyCustomAppBar extends StatelessWidget {
           child: Container(
             margin: EdgeInsets.only(left: 50),
             child: Text(
-              Get.find<TaskController>().isEditing.value
-                  ? 'Edit Task'
-                  : 'New Task',
+              Get.find<TaskController>().isEditing ? 'Edit Task' : 'New Task',
 
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),

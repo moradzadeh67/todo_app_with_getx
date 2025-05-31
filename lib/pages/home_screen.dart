@@ -32,7 +32,7 @@ class MyFloatingActionBotton extends StatelessWidget {
     return FloatingActionButton(
       heroTag: 'hero',
       onPressed: () {
-        Get.find<TaskController>().isEditing.value = false;
+        Get.find<TaskController>().isEditing = false;
         Get.find<TextFieldController>().taskTitle!.clear();
         Get.find<TextFieldController>().taskSubtitle!.clear();
         Get.toNamed('/addscreen')!.then((value) {
@@ -72,14 +72,14 @@ class BottomSectionWidget extends StatelessWidget {
                   Get.find<TaskController>().tasks.removeAt(index);
                 },
                 title: Text(task.taskTitle ?? ''),
-                subtitle: Text(task.taskTitle ?? ''),
+                subtitle: Text(task.taskSubtitle ?? ''),
                 onTap: () {
-                  Get.find<TaskController>().isEditing.value = true;
+                  Get.find<TaskController>().isEditing = true;
                   Get.find<TaskController>().index = index;
                   Get.find<TextFieldController>().taskTitle!.text =
-                      task.taskTitle;
+                      task.taskTitle!;
                   Get.find<TextFieldController>().taskSubtitle!.text =
-                      task.taskSubtitle;
+                      task.taskSubtitle!;
                   Get.toNamed('/addscreen');
                 },
                 trailing: Checkbox(
@@ -88,7 +88,7 @@ class BottomSectionWidget extends StatelessWidget {
                   value: task.status,
                   side: BorderSide(color: Colors.black45, width: 1.5),
                   onChanged: (value) {
-                    task.status = !task.status;
+                    task.status = !task.status!;
                     Get.find<TaskController>().tasks[index] = task;
                   },
                   shape: RoundedRectangleBorder(
